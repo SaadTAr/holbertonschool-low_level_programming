@@ -3,10 +3,10 @@
 #include "3-calc.h"
 
 /**
- * get_op_func - selects the correct function
- * @s: operator passed as argument
- *
- * Return: pointer to the correct function
+ * main - entry point
+ * @argc: number of arguments
+ * @argv: array of arguments
+ * Return: 0 on success
  */
 
 int main(int argc, char *argv[])
