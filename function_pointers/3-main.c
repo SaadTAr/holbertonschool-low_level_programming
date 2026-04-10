@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include "3-calc.h"
 
+/**
+ * get_op_func - selects the correct function
+ * @s: operator passed as argument
+ *
+ * Return: pointer to the correct function
+ */
+
 int main(int argc, char *argv[])
 {
 	int a, b;
