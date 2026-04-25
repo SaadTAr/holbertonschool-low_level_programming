@@ -6,6 +6,9 @@
 
 #define BUF_SIZE 1024
 
+void close_fd(int fd);
+void copy_file(int fd_from, int fd_to, char *file_from, char *file_to);
+
 /**
  * main - copies content of a file to another file
  * @ac: argument count
@@ -15,8 +18,7 @@
  */
 int main(int ac, char *av[])
 {
-	int fd_from, fd_to, r, w;
-	char buffer[BUF_SIZE];
+	int fd_from, fd_to;
 
 	if (ac != 3)
 	{
@@ -35,41 +37,53 @@ int main(int ac, char *av[])
 	if (fd_to == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", av[2]);
-		close(fd_from);
 		exit(99);
 	}
+
+	copy_file(fd_from, fd_to, av[1], av[2]);
+
+	close_fd(fd_from);
+	close_fd(fd_to);
+
+	return (0);
+}
+
+/**
+ * copy_file - copies data between files
+ */
+void copy_file(int fd_from, int fd_to, char *file_from, char *file_to)
+{
+	int r, w;
+	char buffer[BUF_SIZE];
 
 	while ((r = read(fd_from, buffer, BUF_SIZE)) > 0)
 	{
 		w = write(fd_to, buffer, r);
 		if (w != r)
 		{
-			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", av[2]);
-			close(fd_from);
-			close(fd_to);
+			dprintf(STDERR_FILENO,
+				"Error: Can't write to %s\n", file_to);
 			exit(99);
 		}
 	}
 
 	if (r == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", av[1]);
-		close(fd_from);
-		close(fd_to);
+		dprintf(STDERR_FILENO,
+			"Error: Can't read from file %s\n", file_from);
 		exit(98);
 	}
+}
 
-	if (close(fd_from) == -1)
+/**
+ * close_fd - closes file descriptor
+ */
+void close_fd(int fd)
+{
+	if (close(fd) == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd_from);
+		dprintf(STDERR_FILENO,
+			"Error: Can't close fd %d\n", fd);
 		exit(100);
 	}
-
-	if (close(fd_to) == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd_to);
-		exit(100);
-	}
-
-	return (0);
 }
