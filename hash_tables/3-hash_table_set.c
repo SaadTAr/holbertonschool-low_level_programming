@@ -1,4 +1,6 @@
 #include "hash_tables.h"
+#include <stdlib.h>
+#include <string.h>
 
 /**
  * update_node - updates value of an existing node
